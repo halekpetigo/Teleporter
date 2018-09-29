@@ -12,6 +12,7 @@ public class Teleporter {
 
 	static class teleporterMap {
 
+		//hash map to store graph nodes (vertices) and edges
 		private Map<String,Set<String>> nodeMap =  
 	            new HashMap<String,Set<String>>();
 		
@@ -19,28 +20,28 @@ public class Teleporter {
 		teleporterMap(){
 		}
 
+		//adds an edge to node (vertex)
 		public void addEdge(String originNode, String destinationNode) {
-			if(!existNode(originNode)) addNode(originNode);
+			if(!existNode(originNode)) addNode(originNode); //checks if node exists before adding
 			if(!existNode(destinationNode)) addNode(destinationNode);			
-			addMapRoute(originNode, destinationNode);	
+			nodeMap.get(originNode).add(destinationNode);  //add edge
+			nodeMap.get(destinationNode).add(originNode);  //since we can travel both directions add reverse edge
 		}
 		
-		public void addMapRoute(String originNode, String destinationNode) {			
-			nodeMap.get(originNode).add(destinationNode);
-			nodeMap.get(destinationNode).add(originNode);
-		}
-		
+		//adds a node
 		public void addNode(String node) {
-			if(!existNode(node)) {
+			if(!existNode(node)) { //checks if exists before adding
 				Set<String> destinationSet = new HashSet<String>();
 				nodeMap.put(node, destinationSet);
 			}
 		}
 		
+		//checks is node exits
 		public boolean existNode(String node) {
 	        return nodeMap.containsKey(node);
 	    }
 		
+		//checks id edge exists
 		public boolean existEdge(String originNode, String destinationNode) {
 			boolean r = false; 
 			if(nodeMap != null && nodeMap.get(originNode) != null)
@@ -48,18 +49,21 @@ public class Teleporter {
 	        return r;
 	    }
 		
+		//Gets all adjacent nodes
 		public Set<String> getNeighbors(String node) {
 			Set<String> neighbors = null;			
 			neighbors = nodeMap.get(node);			
 			return neighbors;
 		}
 		
+		//checks is we can travel from origin node to destination node. Traversed are nodes we have already checked
 		private boolean isTeleport(String originNode, String destinationNode, List<String> traversed) {
 			
 			boolean canTravel = false;
 			
 			Set<String> myNeighbors = getNeighbors(originNode);
 			
+			//get iterator
 			Iterator<String> iterator = myNeighbors.iterator();
 			
 			//Search neighbor
@@ -78,6 +82,7 @@ public class Teleporter {
 			return canTravel;			
 		}
 		
+		//returns nodes we can travel to in number of jumps provided
 		public List<String> teleportFromJumps(String originNode, int numJump, List<String> traversed) {
 			
 			List<String> destinations = new ArrayList<String>();
@@ -98,23 +103,7 @@ public class Teleporter {
 			return destinations; 
 		}
 		
-		public void canTeleportFromJumps(String originNode, int numJump) {
-			List<String> traversed = new ArrayList<String>();
-			List<String> destinations;
-			traversed.add(originNode);
-			destinations = teleportFromJumps(originNode, numJump, traversed);
-			String outputStr = String.format("cities from Summerton in %s jumps: %s", numJump, destinations.toString());
-			System.out.println(outputStr);
-		}
-		
-		public void canTeleport(String originNode, String destinationNode) {
-			List<String> traversed = new ArrayList<String>();
-			traversed.add(originNode);
-			String answer = isTeleport(originNode, destinationNode, traversed) == false ? "No" : "Yes";
-			String outputStr = String.format("Can I teleport from %s to %s: %s", originNode, destinationNode, answer);
-			System.out.println(outputStr);
-		}
-		
+		//checks if its possible to loop from node
 		public boolean isLoop(String originNode) {
 			boolean r = false; 
 			Set<String> myNeighbors = getNeighbors(originNode);
@@ -137,6 +126,26 @@ public class Teleporter {
 	        return r;
 	    }
 		
+		//used to format answer to teleport in number of jumps questions
+		public void canTeleportFromJumps(String originNode, int numJump) {
+			List<String> traversed = new ArrayList<String>();
+			List<String> destinations;
+			traversed.add(originNode);
+			destinations = teleportFromJumps(originNode, numJump, traversed);
+			String outputStr = String.format("Cities from Summerton in %s jumps: %s", numJump, destinations.toString());
+			System.out.println(outputStr);
+		}
+		
+		//used to format answer to ability to teleport from one node to another
+		public void canTeleport(String originNode, String destinationNode) {
+			List<String> traversed = new ArrayList<String>();
+			traversed.add(originNode);
+			String answer = isTeleport(originNode, destinationNode, traversed) == false ? "No" : "Yes";
+			String outputStr = String.format("Can I teleport from %s to %s: %s", originNode, destinationNode, answer);
+			System.out.println(outputStr);
+		}
+		
+		//used to format answer to ability to loop a node
 		public void canLoop(String originNode) {
 			String answer = isLoop(originNode) == false ? "No" : "Yes";
 			String outputStr = String.format("loop possible from %s: %s", originNode, answer);
@@ -166,6 +175,7 @@ public class Teleporter {
 			 { "Summerton", "Hemingway" }			 
 		};
 		
+		//Load Graph
 		Teleporter teleport = new Teleporter();
 	    for (int i=0; i < inputArray.length; i++) {
 	        String o = inputArray[i][0];
@@ -173,6 +183,7 @@ public class Teleporter {
 	        teleport.tm.addEdge(o, d);
 	    }
 	    
+	    //test questions 
 	    teleport.tm.canTeleportFromJumps("Summerton", 1);
 	    teleport.tm.canTeleportFromJumps("Summerton", 2);
 	    teleport.tm.canTeleport("Springton", "Atlantis");
