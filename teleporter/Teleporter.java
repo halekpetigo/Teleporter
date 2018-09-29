@@ -147,14 +147,11 @@ public class Teleporter {
 
 	}
 
-	private teleporterMap tm;
-
-	private Teleporter() {
-		tm = new teleporterMap();
-	}
-
 	public static void main(String[] args) {
 
+		teleporterMap tm;
+		tm = new teleporterMap();
+		
 		// Create Graph
 		String[][] inputArray = new String[][] { { "Fortuna", "Hemingway" }, { "Fortuna", "Atlantis" },
 				{ "Hemingway", "Chesterfield" }, { "Chesterfield", "Springton" }, { "Los Amigos", "Paristown" },
@@ -162,20 +159,19 @@ public class Teleporter {
 				{ "Summerton", "Hemingway" } };
 
 		// Load Graph
-		Teleporter teleport = new Teleporter();
 		for (int i = 0; i < inputArray.length; i++) {
 			String o = inputArray[i][0];
 			String d = inputArray[i][1];
-			teleport.tm.addEdge(o, d);
+			tm.addEdge(o, d);
 		}
 
 		// test questions
-		teleport.tm.canTeleportFromJumps("Summerton", 1);
-		teleport.tm.canTeleportFromJumps("Summerton", 2);
-		teleport.tm.canTeleport("Springton", "Atlantis");
-		teleport.tm.canTeleport("Oaktown", "Atlantis");
-		teleport.tm.canLoop("Oaktown");
-		teleport.tm.canLoop("Fortuna");
+		tm.canTeleportFromJumps("Summerton", 1);
+		tm.canTeleportFromJumps("Summerton", 2);
+		tm.canTeleport("Springton", "Atlantis");
+		tm.canTeleport("Oaktown", "Atlantis");
+		tm.canLoop("Oaktown");
+		tm.canLoop("Fortuna");
 
 	}
 }
