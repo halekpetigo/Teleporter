@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class Teleporter {
 
-	static class teleporterMap {
+	static private class teleporterMap {
 
 		// hash map to store graph nodes (vertices) and edges
 		private Map<String, Set<String>> nodeMap = new HashMap<String, Set<String>>();
@@ -20,7 +20,7 @@ public class Teleporter {
 		}
 
 		// adds an edge to node (vertex)
-		public void addEdge(String originNode, String destinationNode) {
+		private void addEdge(String originNode, String destinationNode) {
 			if (!existNode(originNode))
 				addNode(originNode); // checks if node exists before adding
 			if (!existNode(destinationNode))
@@ -30,7 +30,7 @@ public class Teleporter {
 		}
 
 		// adds a node
-		public void addNode(String node) {
+		private void addNode(String node) {
 			if (!existNode(node)) { // checks if exists before adding
 				Set<String> destinationSet = new HashSet<String>();
 				nodeMap.put(node, destinationSet);
@@ -38,20 +38,12 @@ public class Teleporter {
 		}
 
 		// checks is node exits
-		public boolean existNode(String node) {
+		private boolean existNode(String node) {
 			return nodeMap.containsKey(node);
 		}
 
-		// checks id edge exists
-		public boolean existEdge(String originNode, String destinationNode) {
-			boolean r = false;
-			if (nodeMap != null && nodeMap.get(originNode) != null)
-				r = nodeMap.get(originNode).contains(destinationNode);
-			return r;
-		}
-
 		// Gets all adjacent nodes
-		public Set<String> getNeighbors(String node) {
+		private Set<String> getNeighbors(String node) {
 			Set<String> neighbors = null;
 			neighbors = nodeMap.get(node);
 			return neighbors;
@@ -85,7 +77,7 @@ public class Teleporter {
 		}
 
 		// returns nodes we can travel to in number of jumps provided
-		public List<String> teleportFromJumps(String originNode, int numJump, List<String> traversed) {
+		private List<String> teleportFromJumps(String originNode, int numJump, List<String> traversed) {
 
 			List<String> destinations = new ArrayList<String>();
 			Set<String> myNeighbors = getNeighbors(originNode);
@@ -106,7 +98,7 @@ public class Teleporter {
 		}
 
 		// checks if its possible to loop from node
-		public boolean isLoop(String originNode) {
+		private boolean isLoop(String originNode) {
 			boolean r = false;
 			Set<String> myNeighbors = getNeighbors(originNode);
 			List<String> traversed = new ArrayList<String>();
@@ -157,7 +149,7 @@ public class Teleporter {
 
 	private teleporterMap tm;
 
-	public Teleporter() {
+	private Teleporter() {
 		tm = new teleporterMap();
 	}
 
